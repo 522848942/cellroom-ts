@@ -27,6 +27,9 @@ const Home = () => {
                             <ResultList />
                         </Col>
                     </Row>
+                    <Row>
+                        <div className="main"></div>
+                    </Row>
                 </Col>
             </Row>
         </div>
