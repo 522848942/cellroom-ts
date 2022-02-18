@@ -1,12 +1,33 @@
-import React from "react";
+import React, { FC, ReactElement, useCallback, useReducer } from "react";
 import { Row, Col } from 'antd'
 
 import SearchInput from "../../components/SearchTool/Input";
-import ResultList from "../../components/SearchTool/List";
+import ResultList from "../../components/SearchTool/ResultList";
+import { resultReducer } from "./reducer";
+import { ACTION_TYPE, IRoom, IState, ISearch } from "./typings";
 
 import './index.css'
 
-const Home = () => {
+
+function init (initResultList: IRoom[]):IState{
+    return{
+        resultList: initResultList
+    }
+}
+
+
+const Home:FC = ():ReactElement => {
+
+    const [state, dispatch] = useReducer(resultReducer,[],init)
+    
+    const getResultList = useCallback((searchSettings: ISearch):void=>{
+        const result:IRoom[] = []
+        dispatch({
+            type: ACTION_TYPE.LOADING_RESULT,
+            payload: result
+        })
+    },[])
+
     return (
         <div className="home">
             <Row justify="center" >
@@ -19,12 +40,16 @@ const Home = () => {
                     </Row>
                     <Row>
                         <Col span={24}>
-                            <SearchInput />
+                            <SearchInput
+                                getResultList = { getResultList }
+                            />
                         </Col>
                     </Row>
                     <Row>
                         <Col span={24}>
-                            <ResultList />
+                            <ResultList
+                                resultList = { state.resultList }
+                            />
                         </Col>
                     </Row>
                     <Row>

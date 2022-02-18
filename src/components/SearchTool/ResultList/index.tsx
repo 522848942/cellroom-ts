@@ -1,13 +1,10 @@
 import React, { FC, ReactElement } from "react";
 import { List, Avatar, Space } from 'antd';
-import { MessageOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
+import { IRoom } from "../../../containers/home/typings";
 
-const ListData: Array<{
-    href: string,
-    title: string,
-    description: string,
-    content: string
-}> = []
+
+
+const ListData: IRoom[] = []
 
 for (let i = 0; i < 23; i++) {
     ListData.push({
@@ -20,7 +17,13 @@ for (let i = 0; i < 23; i++) {
     });
   }
 
-const ResultList = () => {
+interface IProps {
+    resultList: IRoom[]
+}
+
+const ResultList:FC<IProps> = ({
+    resultList
+}):ReactElement => {
     return (
         <div className="result-list">
             <List
