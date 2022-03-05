@@ -16,7 +16,6 @@ export interface IAction {
 
 export interface ISearch {
     input: string;
-    type: string
 }
 
 export enum ACTION_TYPE {

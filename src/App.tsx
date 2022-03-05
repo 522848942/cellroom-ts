@@ -1,11 +1,18 @@
 import React from 'react';
 import Home from './containers/home';
+import Room from './containers/room';
+import styled from 'styled-components'
+
+const AppContainer = styled.div`
+	width: 100%;
+	height: 100%;
+`;
 
 function App() {
 	return (
-		<div className="App">
-			<Home/>
-		</div>
+		<AppContainer>
+			<Room/>
+		</AppContainer>
 	);
 }
 

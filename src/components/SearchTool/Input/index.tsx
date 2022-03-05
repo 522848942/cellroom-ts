@@ -11,15 +11,22 @@ interface IProps {
 const SearchInput:FC<IProps> = ({
     getResultList
 }):ReactElement => {
-    const inputRef = useRef<HTMLInputElement>(null);
+
+    const search = (input:string):void =>{
+        getResultList({
+            input: input
+        })
+    }
+    
     return (
-        <div className="search-input">
+        <div>
             <Search
+                className="search-input"
                 placeholder="input search text"
                 allowClear
                 enterButton="Search"
                 size="large"
-                onSearch={()=>{console.log('hello')}}
+                onSearch={(val)=>{search(val)}}
             />
         </div>
     )

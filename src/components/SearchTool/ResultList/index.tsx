@@ -32,7 +32,7 @@ const ResultList:FC<IProps> = ({
                 pagination={{
                     pageSize: 4,
                 }}
-                dataSource={ListData}
+                dataSource={resultList}
                 footer={
                     <div>
                         <b>ant design</b> footer part
