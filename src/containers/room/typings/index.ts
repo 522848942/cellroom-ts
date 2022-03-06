@@ -20,4 +20,5 @@ export interface IAction{
 
 export enum ACTION_TYPE {
     INIT_CELLLIST = 'initCellList',
+    HELLO = 'hello'
 }
