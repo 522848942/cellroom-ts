@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, useEffect, useReducer, useRef, useState } from "react";
+import React, { FC, ReactElement, useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { Canvas, useFrame } from '@react-three/fiber'
 import styled from 'styled-components'
 import { Suspense } from "react"
@@ -17,6 +17,8 @@ const CanvasContainer = styled.div`
 
 const initialState = {
     floorVictor2: [0, 0],
+    cameraTarget: [0,0,0],
+    cameraPosition: [0,0,0],
     cellList: {
         id: 0,
         cells:[
@@ -26,15 +28,7 @@ const initialState = {
 } as IState
 
 const Room: FC = (): ReactElement => {
-    var width = window.innerWidth; //窗口宽度
-    var height = window.innerHeight; //窗口高度
-    var k = width / height; //窗口宽高比
-    var s = 200; //三维场景显示范围控制系数，系数越大，显示的范围越大
-    //创建相机对象
     const [state, dispatch] = useReducer(roomReducer, initialState)
-    const [camera,setcamera] = useState(new THREE.OrthographicCamera(-s * k, s * k, s, -s, 1, 1000))
-    camera.position.set(0, 0, 200); //设置相机位置
-    camera.lookAt(100,0,0); //设置相机方向(指向的场景对象)
     useEffect(() => {
         const cellList = {
             id: 123,
@@ -51,6 +45,8 @@ const Room: FC = (): ReactElement => {
             ]
         }
         const floorVictor2 = [162, 556]
+        const cameraPosition = [162, 332, 556]
+        const cameraTarget = [0, 0, 0]
         dispatch({
             type: ACTION_TYPE.INIT_CELLLIST,
             payload: cellList as ICellList
@@ -59,12 +55,33 @@ const Room: FC = (): ReactElement => {
             type: ACTION_TYPE.INIT_FLOOR,
             payload: floorVictor2 as [number, number]
         })
+        dispatch({
+            type: ACTION_TYPE.INIT_CAMERAPOSITION,
+            payload: cameraPosition as [number, number, number]
+        })
+        dispatch({
+            type: ACTION_TYPE.INIT_CAMERATARGET,
+            payload: cameraTarget as [number,number,number]
+        })
     }, [])
+
+    const camerTargetChange = useCallback((position:[number, number, number])=>{
+        dispatch({
+            type: ACTION_TYPE.CAMERA_TARGET_CHANGE,
+            payload: position
+        })
+    },[])
 
     return (
         <CanvasContainer>
             <Canvas
-                camera={camera}>
+            camera={{far:10000, position:state.cameraPosition}}
+            onClick={()=>{ 
+                dispatch({
+                type: ACTION_TYPE.INIT_CAMERATARGET,
+                payload: [0,0,0] 
+            })}}
+            >
                 <Suspense fallback={[]}>
                     <pointLight position={[0, 1000, 0]} intensity={0.4} />
                     <OrbitControls
@@ -74,7 +91,7 @@ const Room: FC = (): ReactElement => {
                         zoomSpeed={0.6}
                         panSpeed={0.5}
                         rotateSpeed={0.7}
-                        target={[100,0,0]}
+                        target={state.cameraTarget}
                     />
                     <axesHelper
                         scale={1000}
@@ -85,6 +102,7 @@ const Room: FC = (): ReactElement => {
                                 <Cell
                                     key={cellState.id}
                                     cellState={cellState}
+                                    cameraTargetChange={camerTargetChange}
                                 />
                             )
                         })
