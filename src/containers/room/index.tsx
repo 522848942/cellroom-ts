@@ -6,7 +6,7 @@ import { OrbitControls } from "@react-three/drei";
 
 import Cell from "../../components/room/cell";
 import Floor from "../../components/room/floor";
-import { ACTION_TYPE, ICell, ICellList, IState } from "./typings";
+import { ROOM_ACTION_TYPE, ICell, ICellList, IRoomState } from "./typings";
 import { roomReducer } from "./reducer";
 import * as THREE from "three";
 
@@ -25,7 +25,7 @@ const initialState = {
             {id:0,name:'0',position:[0,0,0]}
         ]
     }
-} as IState
+} as IRoomState
 
 const Room: FC = (): ReactElement => {
     const [state, dispatch] = useReducer(roomReducer, initialState)
@@ -48,26 +48,26 @@ const Room: FC = (): ReactElement => {
         const cameraPosition = [162, 332, 556]
         const cameraTarget = [0, 0, 0]
         dispatch({
-            type: ACTION_TYPE.INIT_CELLLIST,
+            type: ROOM_ACTION_TYPE.INIT_CELLLIST,
             payload: cellList as ICellList
         })
         dispatch({
-            type: ACTION_TYPE.INIT_FLOOR,
+            type: ROOM_ACTION_TYPE.INIT_FLOOR,
             payload: floorVictor2 as [number, number]
         })
         dispatch({
-            type: ACTION_TYPE.INIT_CAMERAPOSITION,
+            type: ROOM_ACTION_TYPE.INIT_CAMERAPOSITION,
             payload: cameraPosition as [number, number, number]
         })
         dispatch({
-            type: ACTION_TYPE.INIT_CAMERATARGET,
+            type: ROOM_ACTION_TYPE.INIT_CAMERATARGET,
             payload: cameraTarget as [number,number,number]
         })
     }, [])
 
     const camerTargetChange = useCallback((position:[number, number, number])=>{
         dispatch({
-            type: ACTION_TYPE.CAMERA_TARGET_CHANGE,
+            type: ROOM_ACTION_TYPE.CAMERA_TARGET_CHANGE,
             payload: position
         })
     },[])
@@ -78,7 +78,7 @@ const Room: FC = (): ReactElement => {
             camera={{far:10000, position:state.cameraPosition}}
             onClick={()=>{ 
                 dispatch({
-                type: ACTION_TYPE.INIT_CAMERATARGET,
+                type: ROOM_ACTION_TYPE.INIT_CAMERATARGET,
                 payload: [0,0,0] 
             })}}
             >
@@ -97,11 +97,11 @@ const Room: FC = (): ReactElement => {
                         scale={1000}
                     />
                     {
-                        state.cellList.cells && state.cellList.cells.map((cellState:ICell)=>{
+                        state.cellList.cells && state.cellList.cells.map((cellData:ICell)=>{
                             return(
                                 <Cell
-                                    key={cellState.id}
-                                    cellState={cellState}
+                                    key={cellData.id}
+                                    cellData={cellData}
                                     cameraTargetChange={camerTargetChange}
                                 />
                             )

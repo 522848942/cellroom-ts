@@ -1,29 +1,29 @@
-import { IAction, ACTION_TYPE, IState, ICellList } from "./typings";
+import { IRoomAction, ROOM_ACTION_TYPE, IRoomState, ICellList, ICellState, ICellAction, CELL_ACTION_TYPE, IGeneList } from "./typings";
 
-function roomReducer(state: IState, action: IAction): IState {
+function roomReducer(state: IRoomState, action: IRoomAction): IRoomState {
   const { type, payload } = action;
   switch (type) {
-    case ACTION_TYPE.INIT_CELLLIST:
+    case ROOM_ACTION_TYPE.INIT_CELLLIST:
       return {
         ...state,
         cellList: payload as ICellList,
       };
-    case ACTION_TYPE.INIT_FLOOR:
+    case ROOM_ACTION_TYPE.INIT_FLOOR:
       return {
         ...state,
         floorVictor2: payload as [number, number],
       };
-    case ACTION_TYPE.INIT_CAMERAPOSITION:
+    case ROOM_ACTION_TYPE.INIT_CAMERAPOSITION:
       return {
         ...state,
         cameraPosition: payload as [number, number, number],
       };
-    case ACTION_TYPE.INIT_CAMERATARGET:
+    case ROOM_ACTION_TYPE.INIT_CAMERATARGET:
       return {
         ...state,
         cameraTarget: payload as [number, number, number],
       };
-    case ACTION_TYPE.CAMERA_TARGET_CHANGE:
+    case ROOM_ACTION_TYPE.CAMERA_TARGET_CHANGE:
       return {
         ...state,
 		cameraTarget: payload as [number, number, number]
@@ -35,4 +35,22 @@ function roomReducer(state: IState, action: IAction): IState {
   }
 }
 
-export { roomReducer };
+function cellReducer(state: ICellState, action:ICellAction):ICellState{
+  const {type, payload} = action;
+  switch (type) {
+    case CELL_ACTION_TYPE.INIT_GENELIST:
+      return{
+        ...state,
+        geneList: payload as IGeneList
+      }
+    default:
+      return{
+        ...state
+      }
+}
+}
+
+export { 
+  roomReducer,
+  cellReducer
+};
