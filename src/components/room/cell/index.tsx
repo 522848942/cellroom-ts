@@ -33,12 +33,12 @@ const Cell: FC<IProps> = ({
         const geneList = {
             id: 123,
             genes: [
-                { id: 1, name: '1', linePath: [[1, 2, 3], [3, 4, 5], [6, 7, 8], [123, 45, 6]] },
-                { id: 1, name: '1', linePath: [[1, 2, 3], [3, 4, 5], [6, 7, 8], [123, 45, 6]] },
-                { id: 1, name: '1', linePath: [[1, 2, 3], [3, 4, 5], [6, 7, 8], [123, 45, 6]] },
-                { id: 1, name: '1', linePath: [[1, 2, 3], [3, 4, 5], [6, 7, 8], [123, 45, 6]] },
-                { id: 1, name: '1', linePath: [[1, 2, 3], [3, 4, 5], [6, 7, 8], [123, 45, 6]] },
-                { id: 1, name: '1', linePath: [[1, 2, 3], [3, 4, 5], [6, 7, 8], [123, 45, 6]] },
+                { id: 1, name: '1', linePath: [[13, 25, 43], [34, 43, 25], [56, 73, 28], [123, 45, 6]] },
+                { id: 2, name: '2', linePath: [[16, 21, 23], [33, 24, 35], [69, 75, 38], [123, 45, 6]] },
+                { id: 3, name: '3', linePath: [[12, 22, 32], [33, 34, 55], [56, 57, 28], [123, 45, 6]] },
+                { id: 4, name: '4', linePath: [[18, 22, 3], [43, 24, 35], [6, 7, 82], [23, 45, 6]] },
+                { id: 5, name: '5', linePath: [[21, 32, 63], [39, 44, 15], [46, 73, 28], [13, 45, 6]] },
+                { id: 6, name: '6', linePath: [[14, 42, 73], [53, 44, 25], [56, 7, 38], [3, 45, 6]] },
             ]
         }
         dispatch({
@@ -74,16 +74,18 @@ const Cell: FC<IProps> = ({
                     {name}
                 </Html>
             </mesh>
-            {
-                state.geneList.genes && state.geneList.genes.map((geneData:IGene)=>{
-                    return(
-                        <Gene
-                            key={geneData.id}
-                            geneData={geneData}
-                        />
-                    )
-                })
-            }
+            <group scale={0.01}>
+                {
+                    state.geneList.genes && state.geneList.genes.map((geneData: IGene) => {
+                        return (
+                            <Gene
+                                key={geneData.id}
+                                geneData={geneData}
+                            />
+                        )
+                    })
+                }
+            </group>
         </group>
 
     )

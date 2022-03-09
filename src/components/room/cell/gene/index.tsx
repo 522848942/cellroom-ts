@@ -1,4 +1,4 @@
-import { Line } from "@react-three/drei";
+import { Html, Line } from "@react-three/drei";
 import React, { FC, ReactElement } from "react";
 import { IGene } from "../../../../containers/room/typings";
 interface IProps {
@@ -10,12 +10,14 @@ const Gene: FC<IProps> = ({
 }): ReactElement => {
     const { name, id, linePath } = geneData;
     return (
-        <Line
-            points={linePath}      
-            color="black" 
-            lineWidth={1}  
-            dashed={false} 
-        />
+        <mesh>
+            <Line
+                points={linePath}
+                color="black"
+                lineWidth={1}
+                dashed={false}
+            />
+        </mesh>
     )
 }
 
