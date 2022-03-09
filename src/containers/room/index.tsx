@@ -1,5 +1,5 @@
-import React, { FC, ReactElement, useCallback, useEffect, useReducer, useRef, useState } from "react";
-import { Canvas, useFrame } from '@react-three/fiber'
+import React, { FC, ReactElement, useCallback, useEffect, useReducer } from "react";
+import { Canvas } from '@react-three/fiber'
 import styled from 'styled-components'
 import { Suspense } from "react"
 import { OrbitControls } from "@react-three/drei";

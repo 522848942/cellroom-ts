@@ -28,7 +28,7 @@ export interface IGeneList{
 export interface IGene{
   id: number;
   name: string;
-  linePath: []
+  linePath: [number, number, number][]
 }
 export interface IRoomAction {
   type: ROOM_ACTION_TYPE;
