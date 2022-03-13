@@ -3,7 +3,7 @@ import { Canvas } from '@react-three/fiber'
 import styled from 'styled-components'
 import { Suspense } from "react"
 import { OrbitControls } from "@react-three/drei";
-import { useControls } from 'leva'
+import { folder, useControls } from 'leva'
 
 import Cell from "../../components/room/cell";
 import Floor from "../../components/room/floor";
@@ -15,19 +15,7 @@ const CanvasContainer = styled.div`
 	height: 100%;
 `;
 
-const initialState = {
-    floorVictor2: [0, 0],
-    cameraTarget: [0, 0, 0],
-    cameraPosition: [0, 0, 0],
-    cellNameList: ['0'],
-    cellList: {
-        id: 0,
-        cells: [
-            { id: 0, name: '0', position: [0, 0, 0] }
-        ]
-    },
-    selectedCellList: []
-} as IRoomState
+const initialState = {} as IRoomState
 
 const Room: FC = (): ReactElement => {
     const [state, dispatch] = useReducer(roomReducer, initialState)
@@ -35,21 +23,20 @@ const Room: FC = (): ReactElement => {
         const cellList: ICellList = {
             id: 123,
             cells: [
-                { id: 1, name: '1', position: [12, 34, 56] },
-                { id: 2, name: '2', position: [112, 24, 556] },
-                { id: 3, name: '3', position: [162, 324, 516] },
-                { id: 4, name: '4', position: [125, 332, 56] },
-                { id: 5, name: '5', position: [132, 34, 56] },
-                { id: 6, name: '6', position: [12, 54, 52] },
-                { id: 7, name: '7', position: [124, 37, 5] },
-                { id: 8, name: '8', position: [11, 38, 521] },
-                { id: 9, name: '9', position: [0, 0, 0] },
+                { id: 0, name: '1', position: [12, 34, 56], color: 'red', showGene: false, size: 1 },
+                { id: 1, name: '2', position: [112, 24, 556], color: 'red', showGene: false, size: 1 },
+                { id: 2, name: '3', position: [162, 324, 516], color: 'red', showGene: false, size: 1 },
+                { id: 3, name: '4', position: [125, 332, 56], color: 'red', showGene: false, size: 1 },
+                { id: 4, name: '5', position: [132, 34, 56], color: 'blue', showGene: false, size: 1 },
+                { id: 5, name: '6', position: [12, 54, 52,], color: 'red', showGene: false, size: 1 },
+                { id: 6, name: '7', position: [124, 37, 5], color: 'red', showGene: false, size: 1 },
+                { id: 7, name: '8', position: [11, 38, 521], color: 'red', showGene: false, size: 1 },
+                { id: 8, name: '9', position: [0, 0, 0], color: 'red', showGene: false, size: 1 },
             ]
         }
         const floorVictor2: [number, number] = [162, 556]
         const cameraPosition: [number, number, number] = [162, 332, 556]
         const cameraTarget: [number, number, number] = [0, 0, 0]
-        const selectedCellList: string[] = []
         const cellNameList = cellList.cells.map((val) => {
             return val.name
         })
@@ -73,35 +60,87 @@ const Room: FC = (): ReactElement => {
             type: ROOM_ACTION_TYPE.INIT_ADDCELLLIST,
             payload: cellNameList
         })
+
+    }, [])
+
+    const targetCellChange = useCallback((cellId: number): void => {
         dispatch({
-            type: ROOM_ACTION_TYPE.INIT_SELECTEDCELLLIST,
-            payload: selectedCellList
+            type: ROOM_ACTION_TYPE.TARGET_CELL_CHANGE,
+            payload: cellId
         })
     }, [])
 
-    const camerTargetChange = useCallback((position: [number, number, number]) => {
+    const camerTargetChange = useCallback((position: [number, number, number]): void => {
         dispatch({
             type: ROOM_ACTION_TYPE.CAMERA_TARGET_CHANGE,
             payload: position
         })
     }, [])
 
+    const cellStateChange = useCallback((newCellList: ICellList): void => {
+        dispatch({
+            type: ROOM_ACTION_TYPE.CELL_STATE_CHANGE,
+            payload: newCellList
+        })
+    }, [])
+
+
     const [, setControler] = useControls(() => ({
         targetCell: {
-            value: state.cellNameList[0],
-            options: state.cellNameList,
+            value: (state.cellNameList ? state.cellNameList[0] : '0'),
+            options: (state.cellNameList ? state.cellNameList : ['0']),
             onChange: (targetCell) => {
-                let newPosition: [number, number, number]
-                if (state.cellList.cells.find(item => item.name == targetCell)) {
-                    newPosition =  state.cellList.cells.find(item => item.name == targetCell)!.position
-                } else {
-                    newPosition =  [0, 0, 0]
+                if (state.cellNameList) {
+                    let newPosition: [number, number, number]
+                    let newCell = state.cellList.cells.find(item => item.name == targetCell)
+                    if (newCell) {
+                        newPosition = newCell!.position
+                        setControler({
+                            color: newCell!.color,
+                            showGene: newCell!.showGene,
+                            size: newCell!.size
+                        })
+                        targetCellChange(newCell!.id)
+                    } else {
+                        newPosition = [0, 0, 0]
+                    }
+                    camerTargetChange(newPosition)
                 }
-                camerTargetChange(newPosition)
             }
         },
-    }), [state.cellNameList])
-
+        color: {
+            value: (state.targetCell ? state.cellList.cells[state.targetCell].color : 'red'),
+            onEditEnd: (color) => {
+                if (state.targetCell) {
+                    let newCellList: ICellList = state.cellList
+                    newCellList.cells[state.targetCell].color = color
+                    cellStateChange(newCellList)
+                }
+            }
+        },
+        showGene: {
+            value: (state.targetCell ? state.cellList.cells[state.targetCell].showGene : false),
+            onEditEnd: (showGene) => {
+                if (state.targetCell) {
+                    let newCellList: ICellList = state.cellList
+                    newCellList.cells[state.targetCell].showGene = showGene
+                    cellStateChange(newCellList)
+                }
+            }
+        },
+        size: {
+            value: (state.targetCell ? state.cellList.cells[state.targetCell].size : 1),
+            min: 0.1,
+            max: 10,
+            onEditEnd: (size) => {
+                if (state.targetCell) {
+                    let newCellList: ICellList = state.cellList
+                    newCellList.cells[state.targetCell].size = size
+                    cellStateChange(newCellList)
+                }
+            }
+        }
+    }), [state.cellNameList, state.targetCell, state.cellList])
     return (
         <CanvasContainer>
             <Canvas
@@ -128,7 +167,7 @@ const Room: FC = (): ReactElement => {
                         scale={1000}
                     />
                     {
-                        state.cellList.cells && state.cellList.cells.map((cellData: ICell) => {
+                        state.cellList && state.cellList.cells.map((cellData: ICell) => {
                             return (
                                 <Cell
                                     key={cellData.id}

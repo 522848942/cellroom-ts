@@ -42,10 +42,15 @@ function roomReducer(state: IRoomState, action: IRoomAction): IRoomState {
         ...state,
         cellNameList: payload as string[],
       };
-    case ROOM_ACTION_TYPE.INIT_SELECTEDCELLLIST:
-      return {
+    case ROOM_ACTION_TYPE.TARGET_CELL_CHANGE:
+      return{
         ...state,
-        selectedCellList: payload as string[],
+        targetCell: payload as number
+      };
+    case ROOM_ACTION_TYPE.CELL_STATE_CHANGE:
+      return{
+        ...state,
+        cellList: payload as ICellList
       };
     default:
       return {

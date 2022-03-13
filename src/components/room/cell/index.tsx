@@ -28,7 +28,14 @@ const Cell: FC<IProps> = ({
     setControler
 }): ReactElement => {
 
-    const { name, position, id } = cellData;
+    const { 
+        id, 
+        name, 
+        position, 
+        color, 
+        showGene,
+        size
+     } = cellData;
     const [state, dispatch] = useReducer(cellReducer, initialState);
 
     const initGeneList = useCallback((id: number) => {
@@ -56,11 +63,17 @@ const Cell: FC<IProps> = ({
                 onClick={() => {
                     cameraTargetChange(position)
                     initGeneList(id)
-                    setControler({targetCell:name})
+                    setControler({
+                        targetCell:name,
+                        color: color,
+                        showGene: showGene,
+                        size: size
+                    })
                 }}
+                scale={size}
             >
                 <sphereBufferGeometry args={[1.004, 32, 32]} />
-                <meshStandardMaterial color="hotpink" />
+                <meshStandardMaterial color={color} />
                 <Html
                     sprite
                     transform
@@ -78,7 +91,7 @@ const Cell: FC<IProps> = ({
             </mesh>
             <group scale={0.01}>
                 {
-                    state.geneList.genes && state.geneList.genes.map((geneData: IGene) => {
+                    showGene && state.geneList.genes && state.geneList.genes.map((geneData: IGene) => {
                         return (
                             <Gene
                                 key={geneData.id}
