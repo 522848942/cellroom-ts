@@ -21,7 +21,7 @@ const Home: FC = (): ReactElement => {
     const [state, dispatch] = useReducer(resultReducer, [], init)
 
     const getResultList = useCallback((searchSettings: ISearch): void => {
-        
+
         //此处加网络请求
         const result: IRoom[] = []
         for (let i = 0; i < 23; i++) {
@@ -39,7 +39,7 @@ const Home: FC = (): ReactElement => {
             payload: result
         })
     }, [])
-        //测试
+    //测试
     return (
         <div className="home">
             <Row justify="center" >

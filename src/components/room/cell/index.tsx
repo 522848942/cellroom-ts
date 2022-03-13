@@ -9,6 +9,7 @@ import { CELL_ACTION_TYPE, ICellState } from '../../../containers/room/typings'
 interface IProps {
     cellData: ICell
     cameraTargetChange: (position: [number, number, number]) => void
+    setControler: (value:{})=>void
 }
 
 const initialState = {
@@ -23,7 +24,8 @@ const initialState = {
 
 const Cell: FC<IProps> = ({
     cellData,
-    cameraTargetChange
+    cameraTargetChange,
+    setControler
 }): ReactElement => {
 
     const { name, position, id } = cellData;
@@ -48,13 +50,14 @@ const Cell: FC<IProps> = ({
     }, [])
 
     return (
+
         <group position={position}>
             <mesh
                 onClick={() => {
                     cameraTargetChange(position)
                     initGeneList(id)
+                    setControler({targetCell:name})
                 }}
-
             >
                 <sphereBufferGeometry args={[1.004, 32, 32]} />
                 <meshStandardMaterial color="hotpink" />
@@ -69,7 +72,6 @@ const Cell: FC<IProps> = ({
                         padding: '10px 18px',
                         border: '2px solid black',
                     }}
-                    onClick={() => cameraTargetChange(position)}//why it doesn't work?
                 >
                     {name}
                 </Html>
@@ -87,7 +89,7 @@ const Cell: FC<IProps> = ({
                 }
             </group>
         </group>
-
+        
     )
 }
 
